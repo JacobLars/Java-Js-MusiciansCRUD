@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
+
+body{
+    background-image: url('https://images.hdqwalls.com/download/music-abstract-art-pic-1920x1080.jpg');
+    font-family: 'Muli', sans-serif;
+}
+
+nav{
+    display: flex;
+    flex-wrap: wrap;
+    background-color: rgba(33, 33, 33);
+    height: 3rem;
+    padding: 5px;
+}
+
+nav button{
+    color: white;
+    background-color: rgb(29, 29, 29);
+    border: solid #9c3232 1px;
+    margin: 2px;
+    border-radius: 1rem;
+}
+
+nav button:hover{
+    cursor: pointer;
+    background-color: rgba(52, 51, 51, 0.9);
+}
+
+.list_container{
+    background-color: rgba(0, 0, 0, 0.6); 
+    color: white;
+}
+
+.list_container h3{
+    height: 5px;
+    margin-left: 25px;
+    text-decoration: underline;
+}
+
+.list_container ul{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li{
+    background-color: rgba(33, 33, 33, 0.9);
+    margin: 1rem;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0px 6px 5px 0px #9c3232;
+    max-width: 90px;
+    height: 12rem;
+}
+
+li > *{
+    margin: 0 auto;
+}
+
+
+ul li:hover{
+    cursor: pointer;
+    background-color: rgba(52, 51, 51, 0.9);
+}
+
+ul li img{
+    height: 100px;
+    width: 100px;
+    border-radius: 1rem;
+}
+
+
+form{
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.6);
+    height: 50rem;
+    
+}
+
+input, textarea{
+    margin: 1rem auto;
+    width: 20%;
+
+}
+
+input{
+    height: 2rem;
+}
+
+textarea{
+    height: 4rem;
+    
+}
+
+
+#genres_container{
+    display: flex;
+    color: white;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: rgba(0, 0, 0, 0.6);
+    width: 100%;
+    margin: 0 auto;
+}
+
+main h3{
+    text-decoration: underline;
+    color: white;
+    margin: 0;
+}
+
+#genres_container > div{
+    width: 15rem;
+}
+
+#genres_container >div > input{
+    height: 1rem;
+}
+
+#musician_page_container{
+    color: #FFFF;
+    background-color: rgba(0, 0, 0, 0.6);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#musician_page_container > *{
+    margin: 5px auto;
+    
+}
+
+
+#musician_page_container img{
+    height: 30rem;
+    border-radius: 1rem;
+    border: solid #9c3232 1px;
+    box-shadow: 0px 6px 5px 0px #9c3232;
+}
+
+h4{
+    text-decoration: underline;
+}
+
+.description{
+    width: 50%;
+}
