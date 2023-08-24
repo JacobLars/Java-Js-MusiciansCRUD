@@ -275,7 +275,7 @@ function getAllBands() {
         .then(result => {
             const bands_header_content = 'Bands';
             const bandClickCallback = function (bandId) {
-                console.log(bandId);
+                getBandById(bandId);
             };
             displayMusicItem(result, bands_header_content, bandClickCallback);
         })
@@ -301,6 +301,15 @@ function getMusicianById(musicianId) {
         .then(response => response.json())
         .then(result => {
             renderMusicianPage(result); 
+        })
+}
+
+function getBandById(bandId) {
+    fetch('http://localhost:8080/api/v1/band/find/' + bandId)
+        .then(response => response.json())
+        .then(result => {
+            console.log(result);
+            renderBandPage(result); 
         })
 }
 
@@ -435,5 +444,8 @@ function getMusicianContainer(data){
 }
 
 function getBandContainer(data){
-    
+    const band_container = createMusicItemContainer('item_page_container');
+
+
+    return band_container;
 }
