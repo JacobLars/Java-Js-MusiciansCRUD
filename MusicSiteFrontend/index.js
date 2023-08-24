@@ -275,7 +275,6 @@ function getAllBands() {
         .then(result => {
             const bands_header_content = 'Bands';
             const bandClickCallback = function (bandId) {
-                test2();
                 console.log(bandId);
             };
             displayMusicItem(result, bands_header_content, bandClickCallback);
@@ -289,7 +288,7 @@ function getAllAlbums() {
         .then(result => {
             const album_header_content = 'Albums';
             const albumClickCallback = function (albumId) {
-                test2();
+                
                 console.log(albumId);
             };
             displayMusicItem(result, album_header_content, albumClickCallback);
@@ -297,16 +296,15 @@ function getAllAlbums() {
 }
 
 function getMusicianById(musicianId) {
+    console.log(musicianId);
     fetch('http://localhost:8080/api/v1/musician/find/' + musicianId)
         .then(response => response.json())
         .then(result => {
-            
-            renderMusicianPage(result);
-            
+            renderMusicianPage(result); 
         })
 }
 
-function displayMusicItem(data, header_content, clickCallback) {
+function displayMusicItem(data, header_content, clickDivCallback) {
     const main = document.querySelector('#main-container');
     const list_container = document.createElement('div');
     list_container.className = 'list_container';
@@ -314,13 +312,13 @@ function displayMusicItem(data, header_content, clickCallback) {
     list_header.textContent = header_content;
     list_container.appendChild(list_header);
     const music_list = document.createElement('ul');
-    const populated_music_list = createMusicListItem(data, music_list, clickCallback);
+    const populated_music_list = createMusicListItem(data, music_list, clickDivCallback);
     list_container.appendChild(populated_music_list);
     main.appendChild(list_container);
 }
 
 
-function createMusicListItem(data, element, clickCallback) {
+function createMusicListItem(data, element, clickDivCallback) {
 
     let dataLenght = data.length;
 
@@ -331,7 +329,7 @@ function createMusicListItem(data, element, clickCallback) {
     for (let index = 0; index < dataLenght; index++) {
         const musician_list_item = document.createElement('li');
         musician_list_item.addEventListener('click', function(){
-            clickCallback(data[index].id);
+            clickDivCallback(data[index].id);
         });
         const musician_image = document.createElement('img');
         const musician_name = document.createElement('p');
@@ -349,36 +347,78 @@ function renderMusicianPage(data) {
     const main = document.querySelector('#main-container');
     main.innerHTML = '';
     renderMenu();
-
     const container = getMusicianContainer(data);
     main.appendChild(container);
 }
 
+function renderBandPage(data){
+    const main = document.querySelector('#main-container');
+    main.innerHTML = '';
+    renderMenu();
+    const container = getBandContainer(data);
+    main.appendChild(container);
+}
+
+function createMusicItemContainer(className) {
+    const musician_container = document.createElement('div');
+    musician_container.className = className;
+    return musician_container;
+}
+
+function createHeader(text) {
+    const header = document.createElement('h1');
+    header.textContent = text;
+    return header;
+}
+
+function createImage(src) {
+    const image = document.createElement('img');
+    image.src = src;
+    return image;
+}
+
+function createParagraph(text) {
+    const paragraph = document.createElement('p');
+    paragraph.textContent = text;
+    return paragraph;
+}
+
+function createSubHeader(content) {
+    const sub_header = document.createElement('h4');
+    sub_header.className = 'sub_header';
+    sub_header.textContent = content;
+    return sub_header;
+}
+
+function createGenreList(data){
+   const list = document.createElement('div');
+   for (const item of data) {
+        const listItem = document.createElement('p');
+        listItem.textContent = item.name;
+        list.appendChild(listItem);
+   }
+   return list;
+}
 
 function getMusicianContainer(data){
-    const musician_container = document.createElement('div');
-    musician_container.id = 'musician_page_container';
-
-    const musician_name = document.createElement('h1');
-    const musician_image = document.createElement('img');
-    const fullName = document.createElement('p');
-    const born = document.createElement('p');
-    const dead = document.createElement('p');
-    const yearsActive = document.createElement('p');
-    const description_header = document.createElement('h4');
-    description_header.textContent = 'Description';
-    const description = document.createElement('p');
-    description.className = 'description';
+    const musician_container = createMusicItemContainer('item_page_container');
+    const musician_name = createHeader(data.name);
+    const musician_image = createImage(data.image);
+    const fullName = createParagraph(data.fullName);
+    const born = createParagraph('Born: ' + data.dateOfBirth + ', ' + data.placeOfBirth);
+    let deathText = '';
     if(data.dateOfDeath !== null && data.placeOfDeath !== null){
-        dead.textContent = 'Dead: ' + data.dateOfDeath + ', ' + data.placeOfDeath;
+        deathText = 'Dead: ' + data.dateOfDeath + ', ' + data.placeOfDeath;
     }
+    const dead = createParagraph(deathText);
+    const yearsActive = createParagraph('Years Active: ' + data.yearsActive);
+    const description_header = createSubHeader('Description');
+    const description = createParagraph(data.description);
+    description.className = 'description';
+    const instruments = createParagraph('Instrumnets: ' + data.instruments);
+    const genres_header = createSubHeader('Genres');
+    const genres = createGenreList(data.genres);
 
-    musician_name.textContent = data.name;
-    musician_image.src = data.image;
-    fullName.textContent = data.fullName;
-    born.textContent = 'Born: ' + data.dateOfBirth + ', ' + data.placeOfBirth;
-    yearsActive.textContent = 'Years Active: ' + data.yearsActive;
-    description.textContent = data.description;
     musician_container.appendChild(musician_name);
     musician_container.appendChild(musician_image);
     musician_container.appendChild(fullName);
@@ -387,15 +427,13 @@ function getMusicianContainer(data){
     musician_container.appendChild(yearsActive);
     musician_container.appendChild(description_header);
     musician_container.appendChild(description);
+    musician_container.appendChild(instruments);
+    musician_container.appendChild(genres_header);
+    musician_container.appendChild(genres);
+    
     return musician_container;
 }
 
-
-
-function test2() {
-    const main = document.querySelector('#main-container');
-    main.innerHTML = '';
-    const header = document.createElement('h2');
-    header.textContent = 'World Hello!';
-    main.appendChild(header);
+function getBandContainer(data){
+    
 }

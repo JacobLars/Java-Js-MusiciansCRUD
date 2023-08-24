@@ -120,7 +120,7 @@ main h3{
     height: 1rem;
 }
 
-#musician_page_container{
+.item_page_container{
     color: #FFFF;
     background-color: rgba(0, 0, 0, 0.6);
     width: 100%;
@@ -128,13 +128,13 @@ main h3{
     flex-direction: column;
 }
 
-#musician_page_container > *{
+.item_page_container > *{
     margin: 5px auto;
     
 }
 
 
-#musician_page_container img{
+.item_page_container img{
     height: 30rem;
     border-radius: 1rem;
     border: solid #9c3232 1px;
