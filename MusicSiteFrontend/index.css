@@ -51,7 +51,7 @@ ul li{
     padding: 2rem;
     border-radius: 1rem;
     box-shadow: 0px 6px 5px 0px #9c3232;
-    max-width: 90px;
+    width: 90px;
     height: 12rem;
 }
 
@@ -147,4 +147,35 @@ h4{
 
 .description{
     width: 50%;
+}
+
+
+#band_logo{
+    background-color: #9c3232;
+    width: 20rem;
+    height: 10rem;
+}
+
+#band_musicians{
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
+    margin: 0 auto;
+}
+#band_musicians > li{
+    flex: 0 0 calc(8% - 1rem);
+    margin: 1rem;
+    padding: 2rem;
+    text-align: center;
+    
+}
+
+#band_musicians > li > *{
+    margin: 5px auto;
+}
+
+#band_musicians li img{  
+    width: 100px;
+    height: 100px;
 }

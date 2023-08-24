@@ -22,5 +22,9 @@ public class AlbumService {
     public List<Album> findAll(){
        return albumRepository.findAll();
     }
+
+    public Album findById(int id) {
+       return albumRepository.findById(id).get();
+    }
     
 }
