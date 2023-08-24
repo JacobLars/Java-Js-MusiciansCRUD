@@ -425,13 +425,84 @@ function createGenreList(data){
    return list;
 }
 
+function createSongTableHead(){
+    const tableHead = document.createElement('thead');
+    const headRow = document.createElement('tr');
+    const songNameHeader = document.createElement('td');
+    songNameHeader.textContent = 'Name';
+    const songDurationHeader = document.createElement('td');
+    songDurationHeader.textContent = 'Duration';
+    const songStreamsHeader = document.createElement('td');
+    songStreamsHeader.textContent = 'Streams';
+    const songGenresHeader = document.createElement('td');
+    songGenresHeader.textContent = 'Genres';
+    const songDesciptionHeader = document.createElement('td');
+    songDesciptionHeader.textContent = 'Description';
+    headRow.appendChild(songNameHeader);
+    headRow.appendChild(songDurationHeader);
+    headRow.appendChild(songStreamsHeader);
+    headRow.appendChild(songGenresHeader);
+    headRow.appendChild(songDesciptionHeader);
+    tableHead.appendChild(headRow);
+    return tableHead;
+}
+
+function createSongsTableBody(songs){
+    const tableBody = document.createElement('tbody');
+    for (const song of songs) {
+        const songRow = document.createElement('tr');
+        const songName = document.createElement('td');
+        const songDuration = document.createElement('td');
+        const songStreams = document.createElement('td');
+        const songGenres = document.createElement('td');
+        const songDescription = document.createElement('td');
+        songName.textContent = song.name;
+        songDuration.textContent = song.duration;
+        songStreams.textContent = song.streams;
+        songDescription.textContent = song.description;
+        for(const genre of song.genres){
+            console.log(genre.name);
+            songGenres.textContent += genre.name + ", ";
+        }
+        songRow.appendChild(songName);
+        songRow.appendChild(songDuration);
+        songRow.appendChild(songStreams);
+        songRow.appendChild(songGenres);
+        songRow.appendChild(songDescription);
+        tableBody.appendChild(songRow);
+    }
+    return tableBody;
+}
+
+function createSongsTable(songs){
+    const table = document.createElement('table');
+    let tableHead = createSongTableHead();
+    let tableBody = createSongsTableBody(songs);
+    table.appendChild(tableHead);
+    table.appendChild(tableBody);
+    return table;
+}
+
 function getAlbumContainer(album){
     const album_container = createMusicItemContainer('item_page_container');
-    const albumName = createImage(album.image);
-    
-    
-    album_container.appendChild(albumName);
+    const albumImage = createImage(album.image);
+    const albumName = createHeader(album.name);
+    const albumRelease = createParagraph('Released: ' + album.released);
+    const albumDescription = createParagraph(album.description);
+    const genresHeader = createSubHeader('Genres');
+    albumDescription.className = 'description';
+    const genres = createGenreList(album.genres);
 
+    const songsHeader = createSubHeader('Songs');
+    const songTable = createSongsTable(album.songs);
+    album_container.appendChild(albumImage);
+    album_container.appendChild(albumName);
+    album_container.appendChild(albumRelease);
+    album_container.appendChild(albumDescription);
+    album_container.appendChild(genresHeader);
+    album_container.appendChild(genres);
+    album_container.appendChild(songsHeader);
+    album_container.appendChild(songTable);
     return album_container;
 }
 

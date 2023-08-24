@@ -179,3 +179,18 @@ h4{
     width: 100px;
     height: 100px;
 }
+
+table{
+    width: 50%;
+    
+}
+
+table, td{
+    border: solid 1px #9c3232;
+    background-color: rgba(33, 33, 33, 0.9);
+}
+
+td{
+    padding: 15px;
+}
+
