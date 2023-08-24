@@ -156,14 +156,14 @@ h4{
     height: 10rem;
 }
 
-#band_musicians{
+.music_item_page_list{
     display: flex;
     flex-wrap: wrap;
     list-style-type: none;
     padding: 0;
     margin: 0 auto;
 }
-#band_musicians > li{
+.music_item_page_list > li{
     flex: 0 0 calc(8% - 1rem);
     margin: 1rem;
     padding: 2rem;
@@ -171,11 +171,11 @@ h4{
     
 }
 
-#band_musicians > li > *{
+.music_item_page_list > li > *{
     margin: 5px auto;
 }
 
-#band_musicians li img{  
+.music_item_page_list li img{  
     width: 100px;
     height: 100px;
 }
