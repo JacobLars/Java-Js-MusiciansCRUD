@@ -16,13 +16,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MusicService {
-    
+
     private AlbumRepository albumRepository;
     private BandRepository bandRepository;
     private GenreRepository genreRepository;
     private MusicianRepository musicianRepository;
     private SongRepository songRepository;
-    
+
     public MusicService(AlbumRepository albumRepository, BandRepository bandRepository, GenreRepository genreRepository, MusicianRepository musicianRepository, SongRepository songRepository) {
         this.albumRepository = albumRepository;
         this.bandRepository = bandRepository;
@@ -30,19 +30,19 @@ public class MusicService {
         this.musicianRepository = musicianRepository;
         this.songRepository = songRepository;
     }
-    
+
     public void addMusicianToBand(int bandId, int musicianId) {
-        
+
         Band band = bandRepository.findById(bandId).get();
         Musician musician = musicianRepository.findById(musicianId).get();
-        
+
         band.addMusician(musician);
         musician.addBands(band);
-        
+
         bandRepository.save(band);
         musicianRepository.save(musician);
     }
-    
+
     public void saveAlbumToMusician(Album album, int musicianId, List<String> genres) {
         Musician musician = musicianRepository.findById(musicianId).get();
         musician.addAlbum(album);
@@ -52,15 +52,17 @@ public class MusicService {
         album.setGenres(genreList);
         musicianRepository.save(musician);
     }
-    
-    public void saveAlbumToBand(Album album, int bandId) {
+
+    public void saveAlbumToBand(Album album, int bandId, List<String> genres) {
         Band band = bandRepository.findById(bandId).get();
         band.addAlbum(album);
         album.setBand(band);
         albumRepository.save(album);
+        List<Genre> genreList = saveGenresToSubject(genres, album);
+        album.setGenres(genreList);
         bandRepository.save(band);
     }
-    
+
     public void saveSongToAlbum(Song song, int albumId) {
         Album album = albumRepository.findById(albumId).get();
         album.addSong(song);
@@ -69,14 +71,13 @@ public class MusicService {
         albumRepository.save(album);
     }
 
-    
     public List<Genre> saveGenresToSubject(List<String> genres, Object subject) {
-        
+
         List<Genre> genresList = new ArrayList<>();
-        
+
         for (String genreName : genres) {
             Genre genre = genreRepository.findGenreByName(genreName);
-            if (subject instanceof Musician musician) {                
+            if (subject instanceof Musician musician) {
                 genre.addMusicians(musician);
             } else if (subject instanceof Band band) {
                 genre.addBand(band);
@@ -111,5 +112,4 @@ public class MusicService {
         band.setGenres(saveGenresToSubject(genres, band));
     }
 
-    
 }

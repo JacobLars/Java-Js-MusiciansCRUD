@@ -273,8 +273,6 @@ function getAllMusicians() {
 }
 
 function renderAddAlbumToMusicianPage(musicianId, musicianName){
-    console.log(musicianId);
-    console.log(musicianName);
     const main = document.querySelector('#main-container');
     main.innerHTML = '';
     renderMenu();
@@ -287,34 +285,31 @@ function renderAddAlbumToMusicianPage(musicianId, musicianName){
 
 function createAddAlbumForm(musicianId){
     const form = document.createElement('form');
-    const { inputElements, submit_btn } = createAddAlbumFormInputs(musicianId);
+    const { inputElements, submit_btn } = createAddAlbumMusicianFormInputs(musicianId);
     appendInputsToForm(form, inputElements);
     createGenreInput();
     form.appendChild(submit_btn);
     return form;
 }
 
-function createAddAlbumFormInputs(musicicanId){
+function createAddAlbumMusicianFormInputs(musicicanId){
     const inputElements = {
         name: createInputElement('Name'),
         image: createInputElement('Image Url'),
         released: createInputElement('Released'),
         description: createTextAreaElement('Description')
     }
-    const submit_btn = createAlbumSubmitBtn(inputElements, musicicanId);
+    const submit_btn = createSaveAlbumMusicianSubmitBtn(inputElements, musicicanId);
 
     return {inputElements, submit_btn};
 }
 
-function createAlbumSubmitBtn(inputElements, musicianId){
+function createSaveAlbumMusicianSubmitBtn(inputElements, musicianId){
     const submit_btn = createSubmitBtn();
     submit_btn.addEventListener('click', () =>{
         const inputValues = extractInputValues(inputElements);
         const selectedGenres = getSelectedGenres();
         inputValues.genres = selectedGenres;
-        console.log(musicianId);
-        console.log(inputValues);
-        console.log(inputValues.genres);
         saveAlbumToMusician(musicianId, inputValues);
     })
     return submit_btn;
@@ -339,8 +334,7 @@ function getAllBands() {
             const bands_header_content = 'Bands';
             const addBtnContent = 'Add Album';
             const addAlbumClickCallback = (bandId, bandName) => {
-                //renderAddAlbumToMusicianPage(musicianId, musicianName);
-                console.log(bandId + bandName);
+                renderAddAlbumToBandPage(bandId, bandName);
             }
             const bandClickCallback = function (bandId) {
                 getBandById(bandId);
@@ -348,6 +342,62 @@ function getAllBands() {
             displayMusicItem(result, bands_header_content, bandClickCallback, addAlbumClickCallback, addBtnContent);
         })
         .catch(error => console.log('error', error));
+}
+
+function renderAddAlbumToBandPage(bandId, bandName){
+    const main = document.querySelector('#main-container');
+    main.innerHTML = '';
+    renderMenu();
+    const musicianNameHeader = document.createElement('h2');
+    musicianNameHeader.textContent ='Add album to ' + bandName;
+    const form = createAddAlbumBandForm(bandId);
+    main.appendChild(musicianNameHeader);
+    main.appendChild(form);
+}
+
+function createAddAlbumBandForm(bandId){
+    const form = document.createElement('form');
+    const { inputElements, submit_btn } = createAddAlbumBandInputs(bandId);
+    appendInputsToForm(form, inputElements);
+    createGenreInput();
+    form.appendChild(submit_btn);
+    return form;
+}
+
+
+function createAddAlbumBandInputs(bandId){
+    const inputElements = {
+        name: createInputElement('Name'),
+        image: createInputElement('Image Url'),
+        released: createInputElement('Released'),
+        description: createTextAreaElement('Description')
+    }
+    const submit_btn = createAddAlbumBandSubmitBtn(inputElements, bandId);
+
+    return {inputElements, submit_btn};
+}
+
+function createAddAlbumBandSubmitBtn(inputElements, bandId){
+    const submit_btn = createSubmitBtn();
+    submit_btn.addEventListener('click', (event) =>{
+        const inputValues = extractInputValues(inputElements);
+        const selectedGenres = getSelectedGenres();
+        inputValues.genres = selectedGenres; 
+        saveAlbumToBand(bandId, inputValues);
+    })
+    return submit_btn;
+}
+
+function saveAlbumToBand(bandId, inputValues){
+    const requestBody = JSON.stringify(inputValues);
+    fetch('http://localhost:8080/api/v1/music/band/album/save?bandId=' + bandId + '&genres=' + inputValues.genres, {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: requestBody
+    }).then(console.log('Success'))
+        .catch(error => console.error('Error:', error));
 }
 
 function getAllAlbums() {

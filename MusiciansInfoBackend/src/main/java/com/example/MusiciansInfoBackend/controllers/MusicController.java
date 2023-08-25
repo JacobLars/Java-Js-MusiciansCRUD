@@ -47,8 +47,9 @@ public class MusicController {
     @CrossOrigin("http://127.0.0.1:5500")
     public void saveAlbumToBand(
             @RequestBody Album album,
-            @RequestParam(name = "bandId") int bandId) {
-        musicService.saveAlbumToBand(album, bandId);
+            @RequestParam(name = "bandId") int bandId,
+            @RequestParam(name = "genres")List<String> genres) {
+        musicService.saveAlbumToBand(album, bandId, genres);
     }
 
     @PostMapping("/album/song/save")
