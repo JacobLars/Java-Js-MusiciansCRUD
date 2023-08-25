@@ -53,11 +53,13 @@ public class MusicController {
     }
 
     @PostMapping("/album/song/save")
+    @CrossOrigin("http://127.0.0.1:5500")
     public void saveSongToAlbum(
             @RequestBody Song song,
-            @RequestParam(name = "albumId") int albumId) {
+            @RequestParam(name = "albumId") int albumId,
+            @RequestParam(name = "genres")List<String> genres) {
 
-        musicService.saveSongToAlbum(song, albumId);
+        musicService.saveSongToAlbum(song, albumId, genres);
     }
 
     @PutMapping("/musician/band/delete")

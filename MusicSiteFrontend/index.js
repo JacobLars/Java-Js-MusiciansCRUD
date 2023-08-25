@@ -348,10 +348,10 @@ function renderAddAlbumToBandPage(bandId, bandName){
     const main = document.querySelector('#main-container');
     main.innerHTML = '';
     renderMenu();
-    const musicianNameHeader = document.createElement('h2');
-    musicianNameHeader.textContent ='Add album to ' + bandName;
+    const bandNameHeader = document.createElement('h2');
+    bandNameHeader.textContent ='Add album to ' + bandName;
     const form = createAddAlbumBandForm(bandId);
-    main.appendChild(musicianNameHeader);
+    main.appendChild(bandNameHeader);
     main.appendChild(form);
 }
 
@@ -407,13 +407,69 @@ function getAllAlbums() {
             const album_header_content = 'Albums';
             const buttonContent = 'Add Song';
             const buttonClickCallback = (albumId, albumName) => {
-                console.log(albumId + albumName);
+                renderAddSongPage(albumId, albumName);
             }
             const albumClickCallback = function (albumId) {
                 getAlbumById(albumId);
             };
             displayMusicItem(result, album_header_content, albumClickCallback, buttonClickCallback, buttonContent);
         })
+}
+
+function renderAddSongPage(albumId, albumName){
+    const main = document.querySelector('#main-container');
+    main.innerHTML = '';
+    renderMenu();
+    const albumNameHeader = document.createElement('h2');
+    albumNameHeader.textContent ='Add song to ' + albumName;
+    const form = createAddSongForm(albumId);
+    main.appendChild(albumNameHeader);
+    main.appendChild(form);
+}
+
+function createAddSongForm(albumId){
+    const form = document.createElement('form');
+    const { inputElements, submit_btn } = createAddSongToAlbumInputs(albumId);
+    appendInputsToForm(form, inputElements);
+    createGenreInput();
+    form.appendChild(submit_btn);
+    return form;
+}
+
+function createAddSongToAlbumInputs(albumId){
+    const inputElements = {
+        name: createInputElement('Name'),
+        streams: createInputElement('Streams'),
+        duration: createInputElement('Duration'),
+        description: createTextAreaElement('Description')
+    }
+    const submit_btn = createAddSongSubmitBtn(albumId, inputElements);
+
+    return {inputElements, submit_btn};
+}
+function createAddSongSubmitBtn(albumId, inputElements){
+    const submit_btn = createSubmitBtn();
+    submit_btn.addEventListener('click', () =>{
+        const inputValues = extractInputValues(inputElements);
+        const selectedGenres = getSelectedGenres();
+        inputValues.genres = selectedGenres; 
+        saveSongToAlbum(albumId, inputValues);
+    })
+    return submit_btn;
+}
+
+
+function saveSongToAlbum(albumId, inputValues){
+    const requestBody = JSON.stringify(inputValues);
+    console.log(inputValues.genres);
+    fetch('http://localhost:8080/api/v1/music/album/song/save?albumId='+ albumId +'&genres=' + inputValues.genres, {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: requestBody
+    }).then(console.log('Success'))
+        .catch(error => console.error('Error:', error));
 }
 
 function getAlbumById(albumId){

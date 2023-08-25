@@ -63,11 +63,13 @@ public class MusicService {
         bandRepository.save(band);
     }
 
-    public void saveSongToAlbum(Song song, int albumId) {
+    public void saveSongToAlbum(Song song, int albumId, List<String> genres) {
         Album album = albumRepository.findById(albumId).get();
         album.addSong(song);
         song.setAlbum(album);
         songRepository.save(song);
+        List<Genre> genreList = saveGenresToSubject(genres, song);
+        album.setGenres(genreList);
         albumRepository.save(album);
     }
 
