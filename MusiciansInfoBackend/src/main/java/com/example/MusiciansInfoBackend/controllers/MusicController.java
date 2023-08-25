@@ -26,6 +26,7 @@ public class MusicController {
     }
 
     @PutMapping("/musician/band/add")
+    @CrossOrigin("http://127.0.0.1:5500")
     public void addMusicianToBand(
             @RequestParam(name = "bandId") int bandId,
             @RequestParam(name = "musicianId") int musicianId) {
@@ -34,13 +35,16 @@ public class MusicController {
     }
 
     @PostMapping("/musician/album/save")
+    @CrossOrigin("http://127.0.0.1:5500")
     public void saveAlbumToMusician(
             @RequestBody Album album,
-            @RequestParam(name = "musicianId") int id) {
-        musicService.saveAlbumToMusician(album, id);
+            @RequestParam(name = "musicianId") int id,
+            @RequestParam(name = "genres")List<String> genres) {
+        musicService.saveAlbumToMusician(album, id, genres);
     }
 
     @PostMapping("/band/album/save")
+    @CrossOrigin("http://127.0.0.1:5500")
     public void saveAlbumToBand(
             @RequestBody Album album,
             @RequestParam(name = "bandId") int bandId) {
@@ -86,5 +90,5 @@ public class MusicController {
         return ResponseEntity.ok("Band & Genres saved successfully");
 
     }
-
+    
 }

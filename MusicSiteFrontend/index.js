@@ -94,7 +94,6 @@ function createBandSubmitBtn(inputElements) {
         const inputValues = extractInputValues(inputElements);
         const selectedGenres = getSelectedGenres();
         inputValues.genres = selectedGenres;
-        console.log(inputValues);
         saveBand(inputValues);
     })
 
@@ -260,13 +259,77 @@ function getAllMusicians() {
     fetch('http://localhost:8080/api/v1/musician/find/all')
         .then(response => response.json())
         .then(result => {
+            const buttonContent = 'Add Album';
             const musicians_header = 'Musicians';
+            const addAlbumClickCallback = (musicianId, musicianName) => {
+                renderAddAlbumToMusicianPage(musicianId, musicianName);
+            }
             const musicianClickCallback = function (musicianId) {
                 getMusicianById(musicianId);
             };
-            displayMusicItem(result, musicians_header, musicianClickCallback);
+            displayMusicItem(result, musicians_header, musicianClickCallback, addAlbumClickCallback, buttonContent);
         })
         .catch(error => console.log('error', error));
+}
+
+function renderAddAlbumToMusicianPage(musicianId, musicianName){
+    console.log(musicianId);
+    console.log(musicianName);
+    const main = document.querySelector('#main-container');
+    main.innerHTML = '';
+    renderMenu();
+    const musicianNameHeader = document.createElement('h2');
+    musicianNameHeader.textContent ='Add album to ' + musicianName;
+    const form = createAddAlbumForm(musicianId);
+    main.appendChild(musicianNameHeader);
+    main.appendChild(form);
+}
+
+function createAddAlbumForm(musicianId){
+    const form = document.createElement('form');
+    const { inputElements, submit_btn } = createAddAlbumFormInputs(musicianId);
+    appendInputsToForm(form, inputElements);
+    createGenreInput();
+    form.appendChild(submit_btn);
+    return form;
+}
+
+function createAddAlbumFormInputs(musicicanId){
+    const inputElements = {
+        name: createInputElement('Name'),
+        image: createInputElement('Image Url'),
+        released: createInputElement('Released'),
+        description: createTextAreaElement('Description')
+    }
+    const submit_btn = createAlbumSubmitBtn(inputElements, musicicanId);
+
+    return {inputElements, submit_btn};
+}
+
+function createAlbumSubmitBtn(inputElements, musicianId){
+    const submit_btn = createSubmitBtn();
+    submit_btn.addEventListener('click', () =>{
+        const inputValues = extractInputValues(inputElements);
+        const selectedGenres = getSelectedGenres();
+        inputValues.genres = selectedGenres;
+        console.log(musicianId);
+        console.log(inputValues);
+        console.log(inputValues.genres);
+        saveAlbumToMusician(musicianId, inputValues);
+    })
+    return submit_btn;
+}
+
+function saveAlbumToMusician(musicianId, inputValues){
+    const requestBody = JSON.stringify(inputValues);
+    fetch('http://localhost:8080/api/v1/music/musician/album/save?musicianId=' + musicianId + '&genres=' + inputValues.genres, {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: requestBody
+    }).then(console.log('Success'))
+        .catch(error => console.error('Error:', error));
 }
 
 function getAllBands() {
@@ -274,10 +337,15 @@ function getAllBands() {
         .then(response => response.json())
         .then(result => {
             const bands_header_content = 'Bands';
+            const addBtnContent = 'Add Album';
+            const addAlbumClickCallback = (bandId, bandName) => {
+                //renderAddAlbumToMusicianPage(musicianId, musicianName);
+                console.log(bandId + bandName);
+            }
             const bandClickCallback = function (bandId) {
                 getBandById(bandId);
             };
-            displayMusicItem(result, bands_header_content, bandClickCallback);
+            displayMusicItem(result, bands_header_content, bandClickCallback, addAlbumClickCallback, addBtnContent);
         })
         .catch(error => console.log('error', error));
 }
@@ -287,10 +355,14 @@ function getAllAlbums() {
         .then(response => response.json())
         .then(result => {
             const album_header_content = 'Albums';
+            const buttonContent = 'Add Song';
+            const buttonClickCallback = (albumId, albumName) => {
+                console.log(albumId + albumName);
+            }
             const albumClickCallback = function (albumId) {
                 getAlbumById(albumId);
             };
-            displayMusicItem(result, album_header_content, albumClickCallback);
+            displayMusicItem(result, album_header_content, albumClickCallback, buttonClickCallback, buttonContent);
         })
 }
 
@@ -303,7 +375,6 @@ function getAlbumById(albumId){
 }
 
 function getMusicianById(musicianId) {
-    console.log(musicianId);
     fetch('http://localhost:8080/api/v1/musician/find/' + musicianId)
         .then(response => response.json())
         .then(result => {
@@ -320,7 +391,7 @@ function getBandById(bandId) {
         })
 }
 
-function displayMusicItem(data, header_content, clickDivCallback) {
+function displayMusicItem(data, header_content, clickDivCallback, clickButtonCallback, buttonContent) {
     const main = document.querySelector('#main-container');
     const list_container = document.createElement('div');
     list_container.className = 'list_container';
@@ -328,13 +399,13 @@ function displayMusicItem(data, header_content, clickDivCallback) {
     list_header.textContent = header_content;
     list_container.appendChild(list_header);
     const music_list = document.createElement('ul');
-    const populated_music_list = createMusicianListItem(data, music_list, clickDivCallback);
+    const populated_music_list = createMusicianListItem(data, music_list, clickDivCallback, clickButtonCallback, buttonContent);
     list_container.appendChild(populated_music_list);
     main.appendChild(list_container);
 }
 
 
-function createMusicianListItem(data, element, clickDivCallback) {
+function createMusicianListItem(data, element, clickDivCallback, clickButtonCallback, buttonContent) {
 
     let dataLenght = data.length;
 
@@ -349,11 +420,20 @@ function createMusicianListItem(data, element, clickDivCallback) {
         });
         const musician_image = document.createElement('img');
         const musician_name = document.createElement('p');
+        const addBtn = document.createElement('button');
+        addBtn.className = 'add_btn';
+        addBtn.textContent = buttonContent;
         const musician = data[index];
+        addBtn.addEventListener('click', function(event){
+            event.stopPropagation();
+            clickButtonCallback(musician.id, musician.name);
+        })
+
         musician_image.src = musician.image;
         musician_name.textContent = musician.name;
         musician_list_item.appendChild(musician_image);
         musician_list_item.appendChild(musician_name);
+        musician_list_item.appendChild(addBtn);
         element.appendChild(musician_list_item);
     }
     return element;

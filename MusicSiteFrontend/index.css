@@ -194,3 +194,20 @@ td{
     padding: 15px;
 }
 
+h2{
+    color: white;
+    text-align: center;
+    background-color: rgba(33, 33, 33, 0.9);
+    padding: 10px;
+}
+
+
+.add_btn{
+    background-color: #2fcd73;
+    border: solid 1px;
+}
+
+.add_btn:hover{
+    cursor: pointer;
+    background-color: #2aa65f;
+}

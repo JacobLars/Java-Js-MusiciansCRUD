@@ -43,13 +43,14 @@ public class MusicService {
         musicianRepository.save(musician);
     }
     
-    public void saveAlbumToMusician(Album album, int musicianId) {
+    public void saveAlbumToMusician(Album album, int musicianId, List<String> genres) {
         Musician musician = musicianRepository.findById(musicianId).get();
         musician.addAlbum(album);
         album.setMusician(musician);
         albumRepository.save(album);
+        List<Genre> genreList = saveGenresToSubject(genres, album);
+        album.setGenres(genreList);
         musicianRepository.save(musician);
-        
     }
     
     public void saveAlbumToBand(Album album, int bandId) {
@@ -103,7 +104,6 @@ public class MusicService {
         musicianRepository.save(musician);
         List<Genre> genreList = saveGenresToSubject(genres, musician);
         musician.setGenres(genreList);
-       
     }
 
     public void saveBandAndAddGenres(Band band, List<String> genres) {
